@@ -50,66 +50,6 @@ call plug#end()
 
 syntax on
 
-" airline
-let g:airline_section_a = ''
-let g:airline_section_b = ''
-
-let g:indent_guides_start_level=2
-hi IndentGuidesOdd  guibg=white
-hi IndentGuidesEven guibg=lightgrey
-
-let g:tagbar_ctags_bin="/usr/local/bin/ctags"
-
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" to avoid flickering
-autocmd BufEnter * sign define dummy
-autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
-autocmd FileType nerdtree execute 'sign unplace 9999'
-
-let g:UltiSnipsExpandTrigger       = "<tab>"
-let g:UltiSnipsJumpForwardTrigger  = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-let g:syntastic_auto_loc_list = 2
-au BufNewFile,BufEnter,BufRead *.tex let g:syntastic_auto_loc_list = 2
-" au BufNewFile,BufEnter,BufRead *.tex set formatoptions+=a
-" au BufNewFile,BufEnter,BufRead *.tex set formatlistpat=^\\s*\\\\\\(end\\\\|item\\\\|begin\\)\\>
-
-" goyo
-let g:goyo_width=85
-map ,G :Goyo:colorscheme mydarkZ
-
-if has("gui_running")
-  colorscheme mydarkZ
-  set fuopt=
-  set guiheadroom=0
-  set spell
-  set cursorline
-  set guifont=Menlo:h14
-  hi Pmenu ctermbg=darkblue ctermfg=lightgray guibg=darkblue guifg=lightgray
-else
-  colorscheme darkZ
-endif
-
-set list listchars=tab:>-
-
-" syntastic
-let g:syntastic_error_symbol='✗'
-let g:syntastic_warning_symbol='⚠'
-let g:syntastic_python_checkers=['pylint']
-let g:syntastic_disabled_filetypes=['vim', 'tex']
-let s:wrapkeys = 0
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 2
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-if has("gui_running")
-  set number
-end
-
 set noswapfile
 set undofile
 set undodir=~/.vim/data/undofiles
@@ -170,8 +110,79 @@ set tw=80
 set vb t_vb=
 set wildignore+=*.class,*.dvi,*.aux,*.ps,*.pdf,*.lot,*.lof,*.png,*.gz,*.ps.gz,*.idx,*.ind,*.ilg,*.bbl,*.blg,*.and,*.brf,*.adx,build/
 set wildmenu
+set list listchars=tab:>-
+
+if has("gui_running")
+  colorscheme mydarkZ
+  set fuopt=
+  set number
+  set guiheadroom=0
+  set spell
+  set cursorline
+  set guifont=Menlo:h14
+  hi Pmenu ctermbg=darkblue ctermfg=lightgray guibg=darkblue guifg=lightgray
+else
+  colorscheme darkZ
+endif
+
+let data_dir   = $HOME.'/.vim/data/'
+let backup_dir = data_dir . 'backup'
+let swap_dir   = data_dir . 'swap'
+if finddir(data_dir) == ''
+    silent call mkdir(data_dir)
+endif
+if finddir(backup_dir) == ''
+    silent call mkdir(backup_dir)
+endif
+if finddir(swap_dir) == ''
+    silent call mkdir(swap_dir)
+endif
 
 let mapleader = ","
+
+" airline
+let g:airline_section_a = ''
+let g:airline_section_b = ''
+
+" indent
+let g:indent_guides_start_level=2
+hi IndentGuidesOdd  guibg=white
+hi IndentGuidesEven guibg=lightgrey
+
+" super tab
+let g:SuperTabDefaultCompletionType = '<C-n>'
+
+" to avoid flickering
+autocmd BufEnter * sign define dummy
+autocmd BufEnter * execute 'sign place 9999 line=1 name=dummy buffer=' . bufnr('')
+autocmd FileType nerdtree execute 'sign unplace 9999'
+
+" ultisnips
+let g:UltiSnipsExpandTrigger       = "<tab>"
+let g:UltiSnipsJumpForwardTrigger  = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+
+" au BufNewFile,BufEnter,BufRead *.tex set formatoptions+=a
+" au BufNewFile,BufEnter,BufRead *.tex set formatlistpat=^\\s*\\\\\\(end\\\\|item\\\\|begin\\)\\>
+
+" goyo
+let g:goyo_width=85
+map ,G :Goyo:colorscheme mydarkZ
+
+" syntastic
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='⚠'
+let g:syntastic_python_checkers=['pylint']
+let g:syntastic_disabled_filetypes=['vim', 'tex']
+let s:wrapkeys = 0
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 2
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_auto_loc_list = 2
+au BufNewFile,BufEnter,BufRead *.tex let g:syntastic_auto_loc_list = 2
 
 " NERDTree
 let NERDTreeIgnore=['\.project_tags$', '\~$']
@@ -180,10 +191,12 @@ let g:nerdtree_tabs_autofind=1
 let NERDTreeChDirMode=2
 map <C-BS> :NERDTree
 
+" spell
 map ,us   :set spelllang=en_us
 map ,uk   :set spelllang=en_gb
 map ,de   :set spelllang=de_DE
-map ,mm   :call Make()
+
+" change font quickly
 map ,10   :set guifont=Menlo:h10
 map ,11   :set guifont=Menlo:h11
 map ,12   :set guifont=Menlo:h12
@@ -199,12 +212,14 @@ map ,22   :set guifont=Menlo:h22
 map ,24   :set guifont=Menlo:h24
 map ,26   :set guifont=Menlo:h26
 
+" easy align
+vnoremap <silent> <Enter> :EasyAlign<cr>
+
 "" julia
 au BufNewFile,BufEnter *.jl setl filetype=julia
 au BufNewFile,BufEnter *.jl setl tw=0
 au BufNewFile,BufEnter *.jl let g:latex_to_unicode_auto=1
 au BufNewFile,BufEnter *.jl let g:latex_to_unicode_suggestions=1
-
 
 " python
 au BufNewFile,BufEnter *.py  setl sw=4
@@ -215,17 +230,18 @@ au BufNewFile,BufEnter *.xml let g:xml_syntax_folding=1
 
 " C++
 let g:clang_library_path="/Library/Developer/CommandLineTools/usr/lib/"
+let g:tagbar_ctags_bin="/usr/local/bin/ctags"
+map ,mm :call Make()
 autocmd BufWritePost   *.cpp,*.h,*.c,*.hpp call UpdateTags()
 autocmd BufRead,BufNewFile *.cmake,CMakeLists.txt,*.cmake.in runtime! indent/cmake.vim
 autocmd BufRead,BufNewFile *.cmake,CMakeLists.txt,*.cmake.in setf cmake
 autocmd BufEnter           *.cmake,CMakeLists.txt,*.cmake.in setl nospell
 autocmd BufRead,BufNewFile *.ctest,*.ctest.in setf cmake
 
-" latex
-map ,ff mzgq}'zz.
-
 " vimrc stuff
 map ,lo :e ~/.vimrc
+au! BufWritePost .vimrc so %
+au! BufWritePost .gvimrc so %
 
 function! s:BCA()
   bwipe
@@ -235,30 +251,14 @@ endfunc
 
 :command! -nargs=0 BCA :call s:BCA()
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " navigating long lines
 map  <C-DOWN> gj
 map  <C-UP>   gk
 imap <C-UP>   <ESC>gki
 imap <C-DOWN> <ESC>gji
 
-" easy align
-vnoremap <silent> <Enter> :EasyAlign<cr>
-
-let data_dir   = $HOME.'/.vim/data/'
-let backup_dir = data_dir . 'backup'
-let swap_dir   = data_dir . 'swap'
-if finddir(data_dir) == ''
-    silent call mkdir(data_dir)
-endif
-if finddir(backup_dir) == ''
-    silent call mkdir(backup_dir)
-endif
-if finddir(swap_dir) == ''
-    silent call mkdir(swap_dir)
-endif
-
 " latex
+map ,ff mzgq}'zz.
 let g:LatexBox_latexmk_async = 1
 let g:LatexBox_latexmk_preview_continuously = 1
 let g:LatexBox_output_type = 'pdf'
@@ -278,23 +278,7 @@ let g:Tex_IgnoredWarnings ='
       \"Citation %.%# undefined\n".
       \"\oval, \circle, or \line size unavailable\n"'
 
-" neocomplete
-if has('nvim') == 0
-  let g:neocomplete#enable_at_startup = 1
-  " Use smartcase.
-  let g:neocomplete#enable_smart_case = 1
-  " Set minimum syntax keyword length.
-  let g:neocomplete#sources#syntax#min_keyword_length = 3
-  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-  " Define dictionary.
-  let g:neocomplete#sources#dictionary#dictionaries = {
-        \ 'default' : '',
-        \ 'vimshell' : $HOME.'/.vimshell_hist',
-        \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-endif
-
+"" neocomplete (copied from the internet)
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
     let g:neocomplete#keyword_patterns = {}
@@ -310,25 +294,11 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
   return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
-" <TAB>: completion.
+
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
@@ -341,14 +311,9 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 if !exists('g:neocomplete#sources#omni#input_patterns')
   let g:neocomplete#sources#omni#input_patterns = {}
 endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 
-" vimrc
-au! BufWritePost .vimrc so %
-au! BufWritePost .gvimrc so %
+
