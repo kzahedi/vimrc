@@ -1,10 +1,5 @@
 "" author: Keyan Zahedi (keyan.zahedi@gmail.com)
 
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"" general setting
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:python_host_prog="/usr/bin/python"
-
 set nocp
 filetype on
 filetype plugin on
@@ -129,13 +124,13 @@ let data_dir   = $HOME.'/.vim/data/'
 let backup_dir = data_dir . 'backup'
 let swap_dir   = data_dir . 'swap'
 if finddir(data_dir) == ''
-    silent call mkdir(data_dir)
+  silent call mkdir(data_dir)
 endif
 if finddir(backup_dir) == ''
-    silent call mkdir(backup_dir)
+  silent call mkdir(backup_dir)
 endif
 if finddir(swap_dir) == ''
-    silent call mkdir(swap_dir)
+  silent call mkdir(swap_dir)
 endif
 
 let mapleader = ","
@@ -162,8 +157,6 @@ let g:UltiSnipsExpandTrigger       = "<tab>"
 let g:UltiSnipsJumpForwardTrigger  = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
-" au BufNewFile,BufEnter,BufRead *.tex set formatoptions+=a
-" au BufNewFile,BufEnter,BufRead *.tex set formatlistpat=^\\s*\\\\\\(end\\\\|item\\\\|begin\\)\\>
 
 " goyo
 let g:goyo_width=85
@@ -182,7 +175,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_auto_loc_list = 2
-au BufNewFile,BufEnter,BufRead *.tex let g:syntastic_auto_loc_list = 2
+
 
 " NERDTree
 let NERDTreeIgnore=['\.project_tags$', '\~$']
@@ -259,6 +252,11 @@ imap <C-DOWN> <ESC>gji
 
 " latex
 map ,ff mzgq}'zz.
+
+au BufNewFile,BufEnter,BufRead *.tex let g:syntastic_auto_loc_list = 2
+" au BufNewFile,BufEnter,BufRead *.tex set formatoptions+=a
+" au BufNewFile,BufEnter,BufRead *.tex set formatlistpat=^\\s*\\\\\\(end\\\\|item\\\\|begin\\)\\>
+
 let g:LatexBox_latexmk_async = 1
 let g:LatexBox_latexmk_preview_continuously = 1
 let g:LatexBox_output_type = 'pdf'
@@ -281,7 +279,7 @@ let g:Tex_IgnoredWarnings ='
 "" neocomplete (copied from the internet)
 " Define keyword.
 if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
+  let g:neocomplete#keyword_patterns = {}
 endif
 let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
@@ -315,5 +313,3 @@ endif
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-
