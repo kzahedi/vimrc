@@ -9,7 +9,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'DfrankUtil'
 Plug 'JuliaLang/julia-vim'
-Plug 'LaTeX-Box-Team/LaTeX-Box'
+Plug 'lervag/vimtex'
+" Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'LustyExplorer'
 Plug 'The-NERD-Commenter'
 Plug 'UltiSnips'
@@ -37,9 +38,12 @@ Plug 'https://github.com/tpope/vim-fugitive'
 Plug 'https://github.com/tpope/vim-pathogen'
 Plug 'https://github.com/wincent/command-t'
 Plug 'https://github.com/xolox/vim-misc'
+Plug 'https://github.com/juneedahamed/svnj.vim'
 Plug 'vim-easy-align'
 Plug 'vimprj'
-
+" python
+Plug 'vim-scripts/indentpython.vim'
+Plug 'nvie/vim-flake8'
 call plug#end()
 
 syntax on
@@ -107,7 +111,9 @@ set wildmenu
 set list listchars=tab:>-
 
 if has("gui_running")
-  colorscheme mydarkZ
+  " colorscheme mydarkZ
+  " colorscheme atom
+  colorscheme mayansmoke
   set fuopt=
   set number
   set guiheadroom=0
@@ -116,7 +122,8 @@ if has("gui_running")
   set guifont=Menlo:h14
   hi Pmenu ctermbg=darkblue ctermfg=lightgray guibg=darkblue guifg=lightgray
 else
-  colorscheme darkZ
+  "colorscheme darkZ
+  colorscheme atom
 endif
 
 let data_dir   = $HOME.'/.vim/data/'
@@ -133,6 +140,8 @@ if finddir(swap_dir) == ''
 endif
 
 let mapleader = ","
+let maplocalleader = ","
+
 
 " airline
 let g:airline_section_a = ''
@@ -159,7 +168,7 @@ let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
 " goyo
 let g:goyo_width=85
-map ,G :Goyo:colorscheme mydarkZ
+map ,G :Goyo:colorscheme mayansmoke
 
 " syntastic
 let g:syntastic_error_symbol='✗'
@@ -224,7 +233,7 @@ au BufNewFile,BufEnter *.xml let g:xml_syntax_folding=1
 let g:clang_library_path="/Library/Developer/CommandLineTools/usr/lib/"
 let g:tagbar_ctags_bin="/usr/local/bin/ctags"
 map ,mm :call Make()
-autocmd BufWritePost   *.cpp,*.h,*.c,*.hpp call UpdateTags()
+" autocmd BufWritePost   *.cpp,*.h,*.c,*.hpp call UpdateTags()
 autocmd BufRead,BufNewFile *.cmake,CMakeLists.txt,*.cmake.in runtime! indent/cmake.vim
 autocmd BufRead,BufNewFile *.cmake,CMakeLists.txt,*.cmake.in setf cmake
 autocmd BufEnter           *.cmake,CMakeLists.txt,*.cmake.in setl nospell
@@ -252,18 +261,18 @@ imap <C-DOWN> <ESC>gji
 " latex
 map ,ff mzgq}'zz.
 
-au BufNewFile,BufEnter,BufRead *.tex let g:syntastic_auto_loc_list = 2
+function! TeXSettings()
+  let g:syntastic_auto_loc_list=2
+  setl filetype=tex
+  syn spell toplevel
+endfunction
+
+au BufNewFile,BufEnter,BufRead *.tex call TeXSettings()
 " au BufNewFile,BufEnter,BufRead *.tex set formatoptions+=a
 " au BufNewFile,BufEnter,BufRead *.tex set formatlistpat=^\\s*\\\\\\(end\\\\|item\\\\|begin\\)\\>
 
-let g:LatexBox_latexmk_async = 1
-let g:LatexBox_latexmk_preview_continuously = 1
-let g:LatexBox_output_type = 'pdf'
-let g:LatexBox_cite_pattern = '\c\\\a*cite\a*\*\?\_\s*{'
-let g:LatexBox_quickfix = 0
-let g:LatexBox_latexmk_options = '-r ~/.latexmkrc'
-map <silent> <Leader>ls :silent !/Applications/Skim.app/Contents/SharedSupport/displayline <C-R>=line('.')<CR> "<C-R>=LatexBox_GetOutputFile()<CR>" "%:p"<CR>
-
+let g:vimtex_view_method="skim"
+let g:vimtex_quickfix_mode=0
 let g:Tex_IgnoredWarnings ='
       \"Underfull\n".
       \"Overfull\n".
