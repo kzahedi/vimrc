@@ -39,11 +39,20 @@ Plug 'https://github.com/tpope/vim-pathogen'
 Plug 'https://github.com/wincent/command-t'
 Plug 'https://github.com/xolox/vim-misc'
 Plug 'https://github.com/juneedahamed/svnj.vim'
+Plug 'https://github.com/severin-lemaignan/vim-minimap'
 Plug 'vim-easy-align'
 Plug 'vimprj'
+Plug 'https://github.com/vim-scripts/taglist.vim'
 " python
 Plug 'vim-scripts/indentpython.vim'
 Plug 'nvie/vim-flake8'
+" go
+Plug 'https://github.com/farazdagi/vim-go-ide'
+Plug 'https://github.com/fatih/vim-go'
+" swift
+Plug 'https://github.com/keith/swift.vim'
+" language tool (grammar)
+Plug 'https://github.com/rhysd/vim-grammarous'
 call plug#end()
 
 syntax on
@@ -113,17 +122,18 @@ set list listchars=tab:>-
 if has("gui_running")
   " colorscheme mydarkZ
   " colorscheme atom
-  colorscheme mayansmoke
+  colorscheme solarized
+  " colorscheme mayansmoke
   set fuopt=
   set number
   set guiheadroom=0
   set spell
   set cursorline
-  set guifont=Menlo:h14
+  set guifont=Menlo:h16
   hi Pmenu ctermbg=darkblue ctermfg=lightgray guibg=darkblue guifg=lightgray
 else
   "colorscheme darkZ
-  colorscheme atom
+  "colorscheme solarized
 endif
 
 let data_dir   = $HOME.'/.vim/data/'
@@ -153,7 +163,9 @@ hi IndentGuidesOdd  guibg=white
 hi IndentGuidesEven guibg=lightgrey
 
 " super tab
-let g:SuperTabDefaultCompletionType = '<C-n>'
+" let g:SuperTabDefaultCompletionType = '<C-n>'
+" let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+let g:SuperTabDefaultCompletionType = "context"
 
 " to avoid flickering
 autocmd BufEnter * sign define dummy
@@ -165,10 +177,40 @@ let g:UltiSnipsExpandTrigger       = "<tab>"
 let g:UltiSnipsJumpForwardTrigger  = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
+" go
+" source /Users/zahedi/.vimrc.go
+au BufEnter *.go setl nolist
+let g:go_fmt_command = "goimports"
+let g:go_bin_path = "/Users/zahedi/projects/go/bin/"
+" let s:tlist_def_go_settings = 'go;g:enum;s:struct;u:union;t:type;' . 'v:variable;f:function'
+" let g:go_metalinter_command = "/Users/zahedi/projects/go/bin/golint"
+let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+" let g:golang_goroot = "/Users/zahedi/projects/go/"
+" let $GOPATH='/usr/local/Cellar/go/1.8.3/libexec'
+" let $GOROOT='/Users/zahedi/projects/go/'
+" autocmd FileType go compiler golang
+
+
+
+" Go related mappings
+au FileType go nmap <Leader>gi <Plug>(go-info)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gr <Plug>(go-run)
+au FileType go nmap <Leader>gb <Plug>(go-build)
+au FileType go nmap <Leader>gt <Plug>(go-test)
+au FileType go nmap gd <Plug>(go-def-tab)
+
+" language tool
+let g:languagetool_jar="/Users/zahedi/projects/3rd_party/LanguageTool-3.8/languagetool.jar"
+
+" taglist
+let g:Tlist_Use_Right_Window = 1
 
 " goyo
 let g:goyo_width=85
-map ,G :Goyo:colorscheme mayansmoke
+let g:goyo_height="75%"
+" map ,G :Goyo:colorscheme mayansmoke
+map ,G :Goyo:colorscheme solarized
 
 " syntastic
 let g:syntastic_error_symbol='✗'
@@ -183,6 +225,7 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_auto_loc_list = 2
+let g:syntastic_quiet_messages = {'regex':'Command terminated with space'}
 
 
 " NERDTree
@@ -191,6 +234,7 @@ let NERDSpaceDelims=1
 let g:nerdtree_tabs_autofind=1
 let NERDTreeChDirMode=2
 map <C-BS> :NERDTree
+
 
 " spell
 map ,us   :set spelllang=en_us
@@ -212,6 +256,10 @@ map ,20   :set guifont=Menlo:h20
 map ,22   :set guifont=Menlo:h22
 map ,24   :set guifont=Menlo:h24
 map ,26   :set guifont=Menlo:h26
+
+" solarized
+map ,bl :set background=light
+map ,bd :set background=dark
 
 " easy align
 vnoremap <silent> <Enter> :EasyAlign<cr>
@@ -260,6 +308,7 @@ imap <C-DOWN> <ESC>gji
 
 " latex
 map ,ff mzgq}'zz.
+let g:tex_flavor='latex'
 
 function! TeXSettings()
   let g:syntastic_auto_loc_list=2
@@ -284,27 +333,14 @@ let g:Tex_IgnoredWarnings ='
       \"Citation %.%# undefined\n".
       \"\oval, \circle, or \line size unavailable\n"'
 
-"" neocomplete (copied from the internet)
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-  let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
+""" neocomplete
 " Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-endfunction
-
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><C-g> neocomplete#undo_completion()
+inoremap <expr><C-l> neocomplete#complete_common_string()
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS>  neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><CR>  pumvisible() ? "\<C-Y>" : "\<CR>"
 
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
