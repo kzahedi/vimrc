@@ -17,30 +17,26 @@ Plug 'dimonomid/vim-vimprj'
 Plug 'junegunn/vim-easy-align'
 Plug 'JuliaLang/julia-vim'
 Plug 'lervag/vimtex'
-" Plug 'LaTeX-Box-Team/LaTeX-Box'
 Plug 'bling/vim-airline'
 Plug 'flazz/vim-colorschemes'
 Plug 'Rip-Rip/clang_complete'
 Plug 'Shougo/neocomplete.vim'
-Plug 'Shougo/vimproc.vim'
-Plug 'Shougo/vimshell.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'asenac/vim-airline-loclist'
 Plug 'ervandew/supertab'
 Plug 'junegunn/goyo.vim'
 Plug 'majutsushi/tagbar'
 Plug 'mileszs/ack.vim'
+Plug 'kzahedi/make.vim'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'tpope/vim-fugitive'
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-pathogen'
 Plug 'wincent/command-t'
 Plug 'xolox/vim-misc'
-Plug 'juneedahamed/svnj.vim'
 Plug 'vim-scripts/taglist.vim'
 Plug 'vim-scripts/StripWhiteSpaces'
 " python
@@ -48,12 +44,8 @@ Plug 'nvie/vim-flake8'
 " go
 Plug 'https://github.com/farazdagi/vim-go-ide'
 Plug 'https://github.com/fatih/vim-go'
-" swift
-Plug 'https://github.com/keith/swift.vim'
 " language tool (grammar)
 Plug 'https://github.com/rhysd/vim-grammarous'
-" shell
-Plug 'https://github.com/joonty/vim-do'
 Plug 'https://github.com/icymind/NeoSolarized'
 " slime
 Plug 'https://github.com/jpalardy/vim-slime'
@@ -154,7 +146,7 @@ else
   "colorscheme solarized
 endif
 
-let  g:clang_library_path="/usr/local/Cellar/llvm/5.0.1/lib/"
+let  g:clang_library_path="/usr/local/Cellar/llvm/6.0.0/lib/"
 
 let data_dir   = $HOME.'/.vim/data/'
 let backup_dir = data_dir . 'backup'
@@ -168,6 +160,8 @@ endif
 if finddir(swap_dir) == ''
   silent call mkdir(swap_dir)
 endif
+
+call vimprj#init()
 
 let mapleader = ","
 let maplocalleader = ","
@@ -306,7 +300,7 @@ au BufNewFile,BufEnter *.xml let g:xml_syntax_folding=1
 " C++
 autocmd BufEnter let g:clang_library_path="/Library/Developer/CommandLineTools/usr/lib/"
 autocmd BufEnter let g:tagbar_ctags_bin="/usr/local/bin/ctags"
-map ,mm :call Make()
+map ,mm :call make#Make()
 " autocmd BufWritePost   *.cpp,*.h,*.c,*.hpp call UpdateTags()
 autocmd BufRead,BufNewFile *.cmake,CMakeLists.txt,*.cmake.in runtime! indent/cmake.vim
 autocmd BufRead,BufNewFile *.cmake,CMakeLists.txt,*.cmake.in setf cmake
